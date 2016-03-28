@@ -30,5 +30,5 @@ import org.keycloak.dom.saml.v2.assertion.AttributeStatementType;
 public interface SAMLRoleListMapper {
 
     void mapRoles(AttributeStatementType roleAttributeStatement, ProtocolMapperModel mappingModel, KeycloakSession session,
-                  UserSessionModel userSession, ClientSessionModel clientSession);
+                                     UserSessionModel userSession, ClientSessionModel clientSession);
 }

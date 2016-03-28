@@ -51,7 +51,7 @@ package org.keycloak.common.util;
  *   signs) too soon. Also added an option to suppress the automatic decoding
  *   of gzipped streams. Also added experimental support for specifying a
  *   class loader when using the
- *   {@link #decodeToObject(String, int, ClassLoader)}
+ *   {@link #decodeToObject(java.lang.String, int, java.lang.ClassLoader)}
  *   method.</li>
  *  <li>v2.3.3 - Changed default char encoding to US-ASCII which reduces the internal Java
  *   footprint with its CharEncoders and so forth. Fixed some javadocs that were
@@ -561,7 +561,7 @@ public class Base64
         while( raw.hasRemaining() ){
             int rem = Math.min(3,raw.remaining());
             raw.get(raw3,0,rem);
-            Base64.encode3to4(enc4, raw3, rem, Base64.NO_OPTIONS );
+            Base64.encode3to4(enc4, raw3, rem, Base64.NO_OPTIONS);
             encoded.put(enc4);
         }   // end input remaining
     }
@@ -666,7 +666,7 @@ public class Base64
         try {
             // ObjectOutputStream -> (GZIP) -> Base64 -> ByteArrayOutputStream
             baos  = new java.io.ByteArrayOutputStream();
-            b64os = new OutputStream( baos, ENCODE | options );
+            b64os = new Base64.OutputStream( baos, ENCODE | options );
             if( (options & GZIP) != 0 ){
                 // Gzip
                 gzos = new java.util.zip.GZIPOutputStream(b64os);
@@ -908,12 +908,12 @@ public class Base64
         if( (options & GZIP) != 0 ) {
             java.io.ByteArrayOutputStream  baos  = null;
             java.util.zip.GZIPOutputStream gzos  = null;
-            OutputStream            b64os = null;
+            Base64.OutputStream            b64os = null;
 
             try {
                 // GZip -> Base64 -> ByteArray
                 baos = new java.io.ByteArrayOutputStream();
-                b64os = new OutputStream( baos, ENCODE | options );
+                b64os = new Base64.OutputStream( baos, ENCODE | options );
                 gzos  = new java.util.zip.GZIPOutputStream( b64os );
 
                 gzos.write( source, off, len );
@@ -1282,7 +1282,12 @@ public class Base64
 
                 }   // end try
                 catch( java.io.IOException e ) {
-                    e.printStackTrace();
+                    if (e.getMessage().equals("Unsupported compression method")) {
+                        System.out.println("Base64 decoding: Ignoring GZIP header and just returning originally-decoded bytes."); // Better to log as debug, but jboss logging not available in the module :/
+                    } else {
+                        e.printStackTrace();
+                    }
+
                     // Just return originally-decoded bytes
                 }   // end catch
                 finally {
@@ -1312,7 +1317,7 @@ public class Base64
      * @since 1.5
      */
     public static Object decodeToObject( String encodedObject )
-            throws java.io.IOException, ClassNotFoundException {
+            throws java.io.IOException, java.lang.ClassNotFoundException {
         return decodeToObject(encodedObject,NO_OPTIONS,null);
     }
 
@@ -1335,7 +1340,7 @@ public class Base64
      */
     public static Object decodeToObject(
             String encodedObject, int options, final ClassLoader loader )
-            throws java.io.IOException, ClassNotFoundException {
+            throws java.io.IOException, java.lang.ClassNotFoundException {
 
         // Decode and gunzip if necessary
         byte[] objBytes = decode( encodedObject, options );
@@ -1374,7 +1379,7 @@ public class Base64
         catch( java.io.IOException e ) {
             throw e;    // Catch and throw in order to execute finally{}
         }   // end catch
-        catch( ClassNotFoundException e ) {
+        catch( java.lang.ClassNotFoundException e ) {
             throw e;    // Catch and throw in order to execute finally{}
         }   // end catch
         finally {
@@ -1408,9 +1413,9 @@ public class Base64
             throw new NullPointerException( "Data to encode was null." );
         }   // end iff
 
-        OutputStream bos = null;
+        Base64.OutputStream bos = null;
         try {
-            bos = new OutputStream(
+            bos = new Base64.OutputStream(
                     new java.io.FileOutputStream( filename ), Base64.ENCODE );
             bos.write( dataToEncode );
         }   // end try
@@ -1440,9 +1445,9 @@ public class Base64
     public static void decodeToFile( String dataToDecode, String filename )
             throws java.io.IOException {
 
-        OutputStream bos = null;
+        Base64.OutputStream bos = null;
         try{
-            bos = new OutputStream(
+            bos = new Base64.OutputStream(
                     new java.io.FileOutputStream( filename ), Base64.DECODE );
             bos.write( dataToDecode.getBytes( PREFERRED_ENCODING ) );
         }   // end try
@@ -1476,7 +1481,7 @@ public class Base64
             throws java.io.IOException {
 
         byte[] decodedData = null;
-        InputStream bis = null;
+        Base64.InputStream bis = null;
         try
         {
             // Set up some useful variables
@@ -1493,7 +1498,7 @@ public class Base64
             buffer = new byte[ (int)file.length() ];
 
             // Open a stream
-            bis = new InputStream(
+            bis = new Base64.InputStream(
                     new java.io.BufferedInputStream(
                             new java.io.FileInputStream( file ) ), Base64.DECODE );
 
@@ -1537,7 +1542,7 @@ public class Base64
             throws java.io.IOException {
 
         String encodedData = null;
-        InputStream bis = null;
+        Base64.InputStream bis = null;
         try
         {
             // Set up some useful variables
@@ -1547,7 +1552,7 @@ public class Base64
             int numBytes = 0;
 
             // Open a stream
-            bis = new InputStream(
+            bis = new Base64.InputStream(
                     new java.io.BufferedInputStream(
                             new java.io.FileInputStream( file ) ), Base64.ENCODE );
 
@@ -1631,7 +1636,7 @@ public class Base64
 
 
     /**
-     * A {@link InputStream} will read data from another
+     * A {@link Base64.InputStream} will read data from another
      * <tt>java.io.InputStream</tt>, given in the constructor,
      * and encode/decode to/from Base64 notation on the fly.
      *
@@ -1652,7 +1657,7 @@ public class Base64
 
 
         /**
-         * Constructs a {@link InputStream} in DECODE mode.
+         * Constructs a {@link Base64.InputStream} in DECODE mode.
          *
          * @param in the <tt>java.io.InputStream</tt> from which to read data.
          * @since 1.3
@@ -1663,7 +1668,7 @@ public class Base64
 
 
         /**
-         * Constructs a {@link InputStream} in
+         * Constructs a {@link Base64.InputStream} in
          * either ENCODE or DECODE mode.
          * <p>
          * Valid options:<pre>
@@ -1844,7 +1849,7 @@ public class Base64
 
 
     /**
-     * A {@link OutputStream} will write data to another
+     * A {@link Base64.OutputStream} will write data to another
      * <tt>java.io.OutputStream</tt>, given in the constructor,
      * and encode/decode to/from Base64 notation on the fly.
      *
@@ -1865,7 +1870,7 @@ public class Base64
         private byte[]  decodabet;  // Local copies to avoid extra method calls
 
         /**
-         * Constructs a {@link OutputStream} in ENCODE mode.
+         * Constructs a {@link Base64.OutputStream} in ENCODE mode.
          *
          * @param out the <tt>java.io.OutputStream</tt> to which data will be written.
          * @since 1.3
@@ -1876,7 +1881,7 @@ public class Base64
 
 
         /**
-         * Constructs a {@link OutputStream} in
+         * Constructs a {@link Base64.OutputStream} in
          * either ENCODE or DECODE mode.
          * <p>
          * Valid options:<pre>

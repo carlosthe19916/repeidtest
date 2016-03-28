@@ -92,7 +92,7 @@ public class MultivaluedHashMap<K, V> extends HashMap<K, List<V>>
 
    public void addAll(MultivaluedHashMap<K, V> other)
    {
-      for (Entry<K, List<V>> entry : other.entrySet())
+      for (Map.Entry<K, List<V>> entry : other.entrySet())
       {
          getList(entry.getKey()).addAll(entry.getValue());
       }
@@ -105,7 +105,7 @@ public class MultivaluedHashMap<K, V> extends HashMap<K, List<V>>
       if (!keySet().equals(omap.keySet())) {
          return false;
       }
-      for (Entry<K, List<V>> e : entrySet()) {
+      for (Map.Entry<K, List<V>> e : entrySet()) {
          List<V> olist = omap.get(e.getKey());
          if (e.getValue().size() != olist.size()) {
             return false;

@@ -45,7 +45,6 @@ import org.keycloak.services.util.ObjectMapperResolver;
 import org.keycloak.timer.TimerProvider;
 import org.keycloak.util.JsonSerialization;
 import org.keycloak.common.util.SystemEnvProperties;
-import org.repeid.MessageRestService;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Application;
@@ -86,8 +85,6 @@ public class KeycloakApplication extends Application {
         classes.add(QRCodeResource.class);
         classes.add(ThemeResource.class);
         classes.add(JsResource.class);
-
-        classes.add(MessageRestService.class);
 
         classes.add(KeycloakTransactionCommitter.class);
 

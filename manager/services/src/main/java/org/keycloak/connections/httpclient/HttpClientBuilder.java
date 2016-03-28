@@ -281,11 +281,11 @@ public class HttpClientBuilder {
                     .setSSLSocketFactory(sslsf)
                     .setMaxConnTotal(connectionPoolSize)
                     .setMaxConnPerRoute(maxPooledPerRoute)
-                    /*.setConnectionTimeToLive(connectionTTL, connectionTTLUnit)*/;
+                    .setConnectionTimeToLive(connectionTTL, connectionTTLUnit);
 
             if (maxConnectionIdleTime > 0) {
                 // Will start background cleaner thread
-                //builder.evictIdleConnections(maxConnectionIdleTime, maxConnectionIdleTimeUnit);
+                builder.evictIdleConnections(maxConnectionIdleTime, maxConnectionIdleTimeUnit);
             }
 
             if (disableCookies) builder.disableCookieManagement();

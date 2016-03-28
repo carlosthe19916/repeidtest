@@ -34,7 +34,7 @@ import javax.security.auth.kerberos.KerberosTicket;
 import org.ietf.jgss.GSSCredential;
 
 /**
- * Provides serialization/deserialization of kerberos {@link GSSCredential}, so it can be transmitted from auth-server to the application
+ * Provides serialization/deserialization of kerberos {@link org.ietf.jgss.GSSCredential}, so it can be transmitted from auth-server to the application
  * and used for further calls to kerberos-secured services
  *
  * @author <a href="mailto:mposolda@redhat.com">Marek Posolda</a>

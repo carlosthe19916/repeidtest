@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Unit test for {@link AbstractOAuth2IdentityProvider}
+ * Unit test for {@link org.keycloak.broker.oidc.AbstractOAuth2IdentityProvider}
  * 
  * @author Vlastimil Elias (velias at redhat dot com)
  */

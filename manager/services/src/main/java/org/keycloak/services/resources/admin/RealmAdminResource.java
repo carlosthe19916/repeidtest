@@ -264,12 +264,12 @@ public class RealmAdminResource {
             adminEvent.operation(OperationType.UPDATE).representation(rep).success();
             return Response.noContent().build();
         } catch (PatternSyntaxException e) {
-            return ErrorResponse.error("Specified regex pattern(s) is invalid.", Status.BAD_REQUEST);
+            return ErrorResponse.error("Specified regex pattern(s) is invalid.", Response.Status.BAD_REQUEST);
         } catch (ModelDuplicateException e) {
             throw e;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            return ErrorResponse.error("Failed to update realm", Status.INTERNAL_SERVER_ERROR);
+            return ErrorResponse.error("Failed to update realm", Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -673,7 +673,7 @@ public class RealmAdminResource {
         auth.init(RealmAuth.Resource.REALM).requireManage();
 
         boolean result = new LDAPConnectionTestManager().testLDAP(action, connectionUrl, bindDn, bindCredential, useTruststoreSpi);
-        return result ? Response.noContent().build() : ErrorResponse.error("LDAP test error", Status.BAD_REQUEST);
+        return result ? Response.noContent().build() : ErrorResponse.error("LDAP test error", Response.Status.BAD_REQUEST);
     }
 
     @Path("identity-provider")

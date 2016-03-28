@@ -39,8 +39,8 @@ public interface PartialImport<T> {
      *                                throw this exception.
      */
     public void prepare(PartialImportRepresentation rep,
-                        RealmModel realm,
-                        KeycloakSession session) throws ErrorResponseException;
+                         RealmModel realm,
+                         KeycloakSession session) throws ErrorResponseException;
 
     /**
      * Delete resources that will be overwritten.  This is done separately so

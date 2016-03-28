@@ -173,7 +173,7 @@ public class UsersResource {
                 }
             }
 
-            updateUserFromRep(user, rep, attrsToRemove, realm, session);
+            updateUserFromRep(user, rep, attrsToRemove, realm, session, true);
             adminEvent.operation(OperationType.UPDATE).resourcePath(uriInfo).representation(rep).success();
 
             if (session.getTransaction().isActive()) {
@@ -212,7 +212,7 @@ public class UsersResource {
         try {
             UserModel user = session.users().addUser(realm, rep.getUsername());
             Set<String> emptySet = Collections.emptySet();
-            updateUserFromRep(user, rep, emptySet, realm, session);
+            updateUserFromRep(user, rep, emptySet, realm, session, false);
 
             adminEvent.operation(OperationType.CREATE).resourcePath(uriInfo, user.getId()).representation(rep).success();
 
@@ -229,7 +229,7 @@ public class UsersResource {
         }
     }
 
-    public static void updateUserFromRep(UserModel user, UserRepresentation rep, Set<String> attrsToRemove, RealmModel realm, KeycloakSession session) {
+    public static void updateUserFromRep(UserModel user, UserRepresentation rep, Set<String> attrsToRemove, RealmModel realm, KeycloakSession session, boolean removeMissingRequiredActions) {
         if (rep.getUsername() != null && realm.isEditUsernameAllowed()) {
             user.setUsername(rep.getUsername());
         }
@@ -251,7 +251,7 @@ public class UsersResource {
             for (String action : allActions) {
                 if (reqActions.contains(action)) {
                     user.addRequiredAction(action);
-                } else {
+                } else if (removeMissingRequiredActions) {
                     user.removeRequiredAction(action);
                 }
             }
@@ -619,7 +619,7 @@ public class UsersResource {
             adminEvent.operation(OperationType.DELETE).resourcePath(uriInfo).success();
             return Response.noContent().build();
         } else {
-            return ErrorResponse.error("User couldn't be deleted", Status.BAD_REQUEST);
+            return ErrorResponse.error("User couldn't be deleted", Response.Status.BAD_REQUEST);
         }
     }
 
@@ -808,11 +808,11 @@ public class UsersResource {
 
         UserModel user = session.users().getUserById(id, realm);
         if (user == null) {
-            return ErrorResponse.error("User not found", Status.NOT_FOUND);
+            return ErrorResponse.error("User not found", Response.Status.NOT_FOUND);
         }
 
         if (user.getEmail() == null) {
-            return ErrorResponse.error("User email missing", Status.BAD_REQUEST);
+            return ErrorResponse.error("User email missing", Response.Status.BAD_REQUEST);
         }
 
         ClientSessionModel clientSession = createClientSession(user, redirectUri, clientId);
@@ -838,7 +838,7 @@ public class UsersResource {
             return Response.ok().build();
         } catch (EmailException e) {
             logger.failedToSendActionsEmail(e);
-            return ErrorResponse.error("Failed to send execute actions email", Status.INTERNAL_SERVER_ERROR);
+            return ErrorResponse.error("Failed to send execute actions email", Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -867,12 +867,12 @@ public class UsersResource {
 
         if (!user.isEnabled()) {
             throw new WebApplicationException(
-                ErrorResponse.error("User is disabled", Status.BAD_REQUEST));
+                ErrorResponse.error("User is disabled", Response.Status.BAD_REQUEST));
         }
 
         if (redirectUri != null && clientId == null) {
             throw new WebApplicationException(
-                ErrorResponse.error("Client id missing", Status.BAD_REQUEST));
+                ErrorResponse.error("Client id missing", Response.Status.BAD_REQUEST));
         }
 
         if (clientId == null) {
@@ -882,7 +882,7 @@ public class UsersResource {
         ClientModel client = realm.getClientByClientId(clientId);
         if (client == null || !client.isEnabled()) {
             throw new WebApplicationException(
-                ErrorResponse.error(clientId + " not enabled", Status.BAD_REQUEST));
+                ErrorResponse.error(clientId + " not enabled", Response.Status.BAD_REQUEST));
         }
 
         String redirect;
@@ -890,7 +890,7 @@ public class UsersResource {
             redirect = RedirectUtils.verifyRedirectUri(uriInfo, redirectUri, realm, client);
             if (redirect == null) {
                 throw new WebApplicationException(
-                    ErrorResponse.error("Invalid redirect uri.", Status.BAD_REQUEST));
+                    ErrorResponse.error("Invalid redirect uri.", Response.Status.BAD_REQUEST));
             }
         } else {
             redirect = Urls.accountBase(uriInfo.getBaseUri()).path("/").build(realm.getName()).toString();
@@ -939,7 +939,14 @@ public class UsersResource {
         if (group == null) {
             throw new NotFoundException("Group not found");
         }
-        if (user.isMemberOf(group)) user.leaveGroup(group);
+
+        try {
+            if (user.isMemberOf(group)) user.leaveGroup(group);
+        } catch (ModelException me) {
+            Properties messages = AdminRoot.getMessages(session, realm, auth.getAuth().getToken().getLocale());
+            throw new ErrorResponseException(me.getMessage(), MessageFormat.format(messages.getProperty(me.getMessage(), me.getMessage()), me.getParameters()),
+                    Response.Status.BAD_REQUEST);
+        }
     }
 
     @PUT

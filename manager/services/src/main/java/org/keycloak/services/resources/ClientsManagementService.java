@@ -176,7 +176,7 @@ public class ClientsManagementService {
             error.put(OAuth2Constants.ERROR, "invalid_client");
             error.put(OAuth2Constants.ERROR_DESCRIPTION, "Public clients not allowed");
             event.error(Errors.INVALID_CLIENT);
-            throw new BadRequestException("Public clients not allowed", Response.status(Response.Status.BAD_REQUEST).entity(error).type(MediaType.APPLICATION_JSON_TYPE).build());
+            throw new BadRequestException("Public clients not allowed", javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST).entity(error).type(MediaType.APPLICATION_JSON_TYPE).build());
         }
 
         return client;
@@ -189,7 +189,7 @@ public class ClientsManagementService {
             error.put(OAuth2Constants.ERROR, "invalid_request");
             error.put(OAuth2Constants.ERROR_DESCRIPTION, "Client cluster host not specified");
             event.error(Errors.INVALID_CODE);
-            throw new BadRequestException("Cluster host not specified", Response.status(Response.Status.BAD_REQUEST).entity(error).type(MediaType.APPLICATION_JSON_TYPE).build());
+            throw new BadRequestException("Cluster host not specified", javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST).entity(error).type(MediaType.APPLICATION_JSON_TYPE).build());
         }
 
         return clientClusterHost;

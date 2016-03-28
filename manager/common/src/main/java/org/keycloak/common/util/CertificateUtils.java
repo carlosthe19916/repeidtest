@@ -50,7 +50,7 @@ import org.bouncycastle.operator.bc.BcRSAContentSignerBuilder;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
 /**
- * The Class CertificateUtils provides utility functions for generation of V1 and V3 {@link X509Certificate}
+ * The Class CertificateUtils provides utility functions for generation of V1 and V3 {@link java.security.cert.X509Certificate}
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:giriraj.sharma27@gmail.com">Giriraj Sharma</a>
@@ -62,7 +62,7 @@ public class CertificateUtils {
     }
 
     /**
-     * Generates version 3 {@link X509Certificate}.
+     * Generates version 3 {@link java.security.cert.X509Certificate}.
      *
      * @param keyPair the key pair
      * @param caPrivateKey the CA private key
@@ -131,7 +131,7 @@ public class CertificateUtils {
     }
 
     /**
-     * Generate version 1 self signed {@link X509Certificate}..
+     * Generate version 1 self signed {@link java.security.cert.X509Certificate}..
      *
      * @param caKeyPair the CA key pair
      * @param subject the subject name
@@ -162,7 +162,7 @@ public class CertificateUtils {
     }
 
     /**
-     * Creates the content signer for generation of Version 1 {@link X509Certificate}.
+     * Creates the content signer for generation of Version 1 {@link java.security.cert.X509Certificate}.
      *
      * @param privateKey the private key
      *

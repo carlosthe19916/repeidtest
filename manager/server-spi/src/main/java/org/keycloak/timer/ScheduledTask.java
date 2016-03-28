@@ -15,20 +15,15 @@
  * limitations under the License.
  */
 
-package org.keycloak.protocol.saml.mappers;
+package org.keycloak.timer;
 
-import org.keycloak.models.ClientSessionModel;
 import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.ProtocolMapperModel;
-import org.keycloak.models.UserSessionModel;
-import org.keycloak.dom.saml.v2.assertion.AttributeStatementType;
 
 /**
- * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1 $
+ * @author <a href="mailto:sthorger@redhat.com">Stian Thorgersen</a>
  */
-public interface SAMLAttributeStatementMapper {
+public interface ScheduledTask {
 
-    void transformAttributeStatement(AttributeStatementType attributeStatement, ProtocolMapperModel mappingModel, KeycloakSession session,
-                                        UserSessionModel userSession, ClientSessionModel clientSession);
+    public void run(KeycloakSession session);
+
 }

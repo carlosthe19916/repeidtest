@@ -87,7 +87,7 @@ public final class PemUtils {
      *
      * @param is
      * @return
-     * @throws IOException
+     * @throws java.io.IOException
      */
     public static byte[] pemToDer(InputStream is) throws IOException {
         String pem = pemFromStream(is);
@@ -99,7 +99,7 @@ public final class PemUtils {
      *
      * @param pem
      * @return
-     * @throws IOException
+     * @throws java.io.IOException
      */
     public static byte[] pemToDer(String pem) throws IOException {
         pem = removeBeginEnd(pem);

@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.keycloak.broker.oidc.mappers.AbstractJsonUserAttributeMapper;
 
 /**
- * Unit test for {@link AbstractJsonUserAttributeMapper}
+ * Unit test for {@link org.keycloak.broker.oidc.mappers.AbstractJsonUserAttributeMapper}
  * 
  * @author Vlastimil Elias (velias at redhat dot com)
  */

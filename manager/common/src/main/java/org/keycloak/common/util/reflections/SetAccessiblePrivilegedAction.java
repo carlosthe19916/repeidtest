@@ -21,7 +21,7 @@ import java.lang.reflect.AccessibleObject;
 import java.security.PrivilegedAction;
 
 /**
- * A {@link PrivilegedAction} that calls {@link AccessibleObject#setAccessible(boolean)}
+ * A {@link java.security.PrivilegedAction} that calls {@link java.lang.reflect.AccessibleObject#setAccessible(boolean)}
  */
 public class SetAccessiblePrivilegedAction implements PrivilegedAction<Void> {
 

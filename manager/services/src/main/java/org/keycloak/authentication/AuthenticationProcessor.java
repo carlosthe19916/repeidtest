@@ -871,11 +871,11 @@ public class AuthenticationProcessor {
         return AuthenticationManager.isActionRequired(session, userSession, clientSession, connection, request, uriInfo, event);
     }
 
-    public Result createAuthenticatorContext(AuthenticationExecutionModel model, Authenticator authenticator, List<AuthenticationExecutionModel> executions) {
+    public AuthenticationProcessor.Result createAuthenticatorContext(AuthenticationExecutionModel model, Authenticator authenticator, List<AuthenticationExecutionModel> executions) {
         return new Result(model, authenticator, executions);
     }
 
-    public Result createClientAuthenticatorContext(AuthenticationExecutionModel model, ClientAuthenticator clientAuthenticator, List<AuthenticationExecutionModel> executions) {
+    public AuthenticationProcessor.Result createClientAuthenticatorContext(AuthenticationExecutionModel model, ClientAuthenticator clientAuthenticator, List<AuthenticationExecutionModel> executions) {
         return new Result(model, clientAuthenticator, executions);
     }
 

@@ -43,7 +43,7 @@ import java.util.Set;
  */
 public class Reflections {
     /**
-     * An empty array of type {@link Annotation}, useful converting lists to arrays.
+     * An empty array of type {@link java.lang.annotation.Annotation}, useful converting lists to arrays.
      */
     public static final Annotation[] EMPTY_ANNOTATION_ARRAY = new Annotation[0];
 
